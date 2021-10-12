@@ -1,0 +1,35 @@
+# O objetivo do script é buscar multiplas contas em diversos dominios
+# As contas devem estar carregadas uma abaixo da outra no arquivo C:\Users\<Usuario>\Desktop\Temp\Pesquisa_Contas.txt 
+# Os dominios devem ser inseridos no script na linha 6 
+# Pode fornecer um dominio específico ou deixar em branco para pesquisar todos os dominios do script
+# O resultado será gerado em CSV no caminho C:\Users\<User>\Desktop\Temp\Resultado.csv
+# Não esqueça de substituir os pontos por usuario e os dominios que deseja
+
+$dominio=Read-Host -Prompt "Informar dominio: "
+If ($dominio -ieq "") {
+    $domains = "dominio1.com","dominio2.com","dominio3.com"
+    foreach($domain in $domains) {
+         Get-Content C:\Users\....\Desktop\Temp\Pesquisa_Contas.txt 
+         ForEach-Object{
+              Try {get-aduser -Identity $_ -Properties * -server $domain|
+              Select 'SamAccountName','PasswordLastset','LastLogonDate',$domain |
+              Export-Csv C:\Users\....\Desktop\Temp\Resultado.csv -NoTypeInformation -Append
+                    }
+             Catch {
+               Write-Host $_ "Não encontrado"
+                   }
+        }
+    }
+}
+Else {
+Get-Content C:\Users\4447526\Desktop\Temp\Pesquisa_Contas.txt |
+         ForEach-Object{
+              Try {get-aduser -Identity $_ -Properties * -server $dominio|
+              Select 'SamAccountName','PasswordLastset','LastLogonDate' |
+              Export-Csv C:\Users\....\Desktop\Temp\Resultado.csv -NoTypeInformation -Append
+                    }
+             Catch {
+               Write-Host $_ "Não encontrado"
+                   }
+           }
+}
